@@ -1,35 +1,72 @@
 import { Link, useLocation } from "react-router-dom";
-import { BarChart } from "lucide-react";
+import { BarChart, Wallet, TrendingUp, PieChart } from "lucide-react";
+import { motion } from "framer-motion";
 
- function Nav() {
+function Nav() {
   const { pathname } = useLocation();
 
   const navItems = [
-    { name: "Home", path: "/" },
-    { name: "Dashboard", path: "/dashboard" },
-    { name: "Budget Tracker", path: "/budget" },
+    { name: "Home", path: "/", icon: Wallet },
+    { name: "Dashboard", path: "/dashboard", icon: PieChart },
+    { name: "Budget Tracker", path: "/budget", icon: TrendingUp },
   ];
 
   return (
-    <nav className="flex justify-between items-center p-4 bg-white shadow-md sticky top-0 z-50">
-      <div className="flex items-center space-x-2">
-        <BarChart className="h-6 w-6 text-primary" />
-        <h1 className="text-2xl font-bold">Finance Tracker</h1>
-      </div>
-      <div className="space-x-6">
-        {navItems.map(({ name, path }) => (
-          <Link
-            key={name}
-            to={path}
-            className={`text-base font-medium hover:text-primary ${
-              pathname === path ? "text-primary" : "text-gray-500"
-            }`}
+    <motion.nav 
+      initial={{ y: -100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+      className="relative z-50 backdrop-blur-xl bg-white/5 border-b border-white/10 sticky top-0"
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center py-4">
+          <motion.div 
+            className="flex items-center space-x-3"
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.3 }}
           >
-            {name}
-          </Link>
-        ))}
+            <div className="relative">
+              <BarChart className="h-8 w-8 text-emerald-400" />
+              <div className="absolute inset-0 h-8 w-8 bg-emerald-400 rounded-full blur-lg opacity-30"></div>
+            </div>
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
+              Finance Tracker
+            </h1>
+          </motion.div>
+          
+          <div className="flex space-x-1">
+            {navItems.map(({ name, path, icon: Icon }, index) => (
+              <motion.div
+                key={name}
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+              >
+                <Link
+                  to={path}
+                  className={`relative px-4 py-2 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2 ${
+                    pathname === path 
+                      ? "text-white bg-gradient-to-r from-emerald-500/20 to-blue-500/20 border border-emerald-400/30" 
+                      : "text-white/70 hover:text-white hover:bg-white/5"
+                  }`}
+                >
+                  <Icon className="h-4 w-4" />
+                  <span>{name}</span>
+                  {pathname === path && (
+                    <motion.div
+                      layoutId="activeTab"
+                      className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-blue-500/10 rounded-lg border border-emerald-400/20"
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                    />
+                  )}
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
       </div>
-    </nav>
+    </motion.nav>
   );
 }
+
 export default Nav;
