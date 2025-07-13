@@ -44,7 +44,7 @@ export function BudgetTracker({ transactions }: BudgetTrackerProps) {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent mb-2"
+            className="text-4xl font-bold bg-gradient-to-r  from-emerald-600 to-blue-400 bg-clip-text text-transparent mb-2"
           >
             Budget Tracker
           </motion.h1>

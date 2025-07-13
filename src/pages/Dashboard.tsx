@@ -27,12 +27,12 @@ function Dashboard() {
         >
           <Card className="bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 border-emerald-500/20 backdrop-blur-xl">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-white/80">Analytics Overview</CardTitle>
+              <CardTitle className="text-sm font-medium text-black">Analytics Overview</CardTitle>
               <BarChart className="h-4 w-4 text-emerald-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-lg text-white/90">Coming Soon</div>
-              <p className="text-sm text-white/60 mt-2">
+              <div className="text-lg text-black">Coming Soon</div>
+              <p className="text-sm text-black">
                 Detailed spending analytics and trends
               </p>
             </CardContent>
@@ -46,12 +46,12 @@ function Dashboard() {
         >
           <Card className="bg-gradient-to-br from-blue-500/10 to-blue-600/5 border-blue-500/20 backdrop-blur-xl">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-white/80">Category Breakdown</CardTitle>
+              <CardTitle className="text-sm font-medium text-black">Category Breakdown</CardTitle>
               <PieChart className="h-4 w-4 text-blue-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-lg text-white/90">Coming Soon</div>
-              <p className="text-sm text-white/60 mt-2">
+              <div className="text-lg text-black">Coming Soon</div>
+              <p className="text-sm text-black">
                 Visual breakdown of spending by category
               </p>
             </CardContent>
@@ -65,12 +65,12 @@ function Dashboard() {
         >
           <Card className="bg-gradient-to-br from-purple-500/10 to-purple-600/5 border-purple-500/20 backdrop-blur-xl">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-white/80">Forecasting</CardTitle>
+              <CardTitle className="text-sm font-medium text-black">Forecasting</CardTitle>
               <TrendingUp className="h-4 w-4 text-purple-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-lg text-white/90">Coming Soon</div>
-              <p className="text-sm text-white/60 mt-2">
+              <div className="text-lg text-black">Coming Soon</div>
+              <p className="text-sm text-black">
                 AI-powered spending predictions
               </p>
             </CardContent>
