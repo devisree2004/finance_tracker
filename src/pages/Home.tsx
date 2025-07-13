@@ -67,7 +67,7 @@ function Home({ transactions, setTransactions }: HomeProps) {
         >
           <Card className="bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 border-emerald-500/20 backdrop-blur-xl">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-white/80">Total Income</CardTitle>
+              <CardTitle className="text-sm font-medium text-black">Total Income</CardTitle>
               <TrendingUp className="h-4 w-4 text-emerald-400" />
             </CardHeader>
             <CardContent>
@@ -83,7 +83,7 @@ function Home({ transactions, setTransactions }: HomeProps) {
         >
           <Card className="bg-gradient-to-br from-red-500/10 to-red-600/5 border-red-500/20 backdrop-blur-xl">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-white/80">Total Expenses</CardTitle>
+              <CardTitle className="text-sm font-medium text-black">Total Expenses</CardTitle>
               <TrendingDown className="h-4 w-4 text-red-400" />
             </CardHeader>
             <CardContent>
@@ -99,7 +99,7 @@ function Home({ transactions, setTransactions }: HomeProps) {
         >
           <Card className={`bg-gradient-to-br ${balance >= 0 ? 'from-blue-500/10 to-blue-600/5 border-blue-500/20' : 'from-orange-500/10 to-orange-600/5 border-orange-500/20'} backdrop-blur-xl`}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-white/80">Balance</CardTitle>
+              <CardTitle className="text-sm font-medium text-black">Balance</CardTitle>
               <DollarSign className={`h-4 w-4 ${balance >= 0 ? 'text-blue-400' : 'text-orange-400'}`} />
             </CardHeader>
             <CardContent>
