@@ -8,14 +8,27 @@ import { TransactionList } from './TransactionList';
 import { MonthlyExpensesChart } from './MonthlyExpensesChart';
 import { Transaction } from '../App';
 import toast from 'react-hot-toast';
+import { useEffect } from 'react';
+import { getTransactions, addTransaction } from '../lib/transactions'; // you'll create this file if not done
+
 
 interface HomeProps {
   transactions: Transaction[];
   setTransactions: React.Dispatch<React.SetStateAction<Transaction[]>>;
 }
 
+
+
 function Home({ transactions, setTransactions }: HomeProps) {
   const [showForm, setShowForm] = useState(false);
+  useEffect(() => {
+  const fetchData = async () => {
+    const data = await getTransactions();
+    setTransactions(data);
+  };
+
+  fetchData();
+}, []);
 
   const totalIncome = transactions
     .filter(t => t.type === 'income')
@@ -27,15 +40,16 @@ function Home({ transactions, setTransactions }: HomeProps) {
 
   const balance = totalIncome - totalExpenses;
 
-  const handleAddTransaction = (transaction: Omit<Transaction, 'id'>) => {
-    const newTransaction: Transaction = {
-      ...transaction,
-      id: Date.now().toString(),
-    };
-    setTransactions(prev => [newTransaction, ...prev]);
+  const handleAddTransaction = async (transaction: Omit<Transaction, '_id'>) => {
+  try {
+    const savedTransaction = await addTransaction(transaction);
+    setTransactions(prev => [savedTransaction, ...prev]);
     setShowForm(false);
     toast.success(`${transaction.type === 'income' ? 'Income' : 'Expense'} added successfully!`);
-  };
+  } catch (err) {
+    toast.error('Failed to save transaction');
+  }
+};
 
   const handleDeleteTransaction = (id: string) => {
     setTransactions(prev => prev.filter(t => t.id !== id));

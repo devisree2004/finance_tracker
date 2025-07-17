@@ -1,8 +1,9 @@
 const jwt = require('jsonwebtoken');
-
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecret';
 
 const authMiddleware = (req, res, next) => {
+  console.log("🔍 Incoming headers:", req.headers); // Add this line
+
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -13,7 +14,7 @@ const authMiddleware = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    req.user = decoded; // user.id is now available on req.user
+    req.user = decoded;
     next();
   } catch (err) {
     res.status(401).json({ message: 'Invalid token' });
