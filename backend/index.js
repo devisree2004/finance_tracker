@@ -7,14 +7,16 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// MongoDB connection
 mongoose.connect(process.env.MONGO_URL)
   .then(() => console.log('✅ MongoDB Connected'))
   .catch((err) => console.error('❌ Mongo Error:', err));
 
-// Routes
 const transactionRoutes = require('./routes/transactions');
-app.use('/api/transactions', transactionRoutes);
+const authRoutes = require('./routes/auth');
+const authMiddleware = require('./middleware/authMiddleware'); // ✅
+
+app.use('/api/auth', authRoutes);
+app.use('/api/transactions', authMiddleware, transactionRoutes); // ✅ protected
 
 app.get('/', (req, res) => {
   res.send('🚀 Finance Tracker Backend is Running!');
