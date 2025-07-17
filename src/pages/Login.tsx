@@ -1,5 +1,4 @@
-// src/pages/Login.tsx
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { login } from '../lib/auth';
 import toast from 'react-hot-toast';
@@ -9,12 +8,18 @@ function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  // ✅ Clear fields on mount
+  useEffect(() => {
+    setEmail('');
+    setPassword('');
+  }, []);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const res = await login(email, password);
       if (res.token) {
-        sessionStorage.setItem('token', res.token); // 🔄 Changed from localStorage
+        sessionStorage.setItem('token', res.token);
         toast.success('Login successful!');
         navigate('/');
       } else {
@@ -30,7 +35,9 @@ function Login() {
       <h2 className="text-3xl mb-4">Login</h2>
       <form onSubmit={handleLogin} className="flex flex-col gap-4 w-80">
         <input
+          autoComplete="off" // 🔐 prevent autofill
           type="email"
+          name="email"
           placeholder="Email"
           value={email}
           onChange={e => setEmail(e.target.value)}
@@ -38,7 +45,9 @@ function Login() {
           className="p-2 rounded text-black"
         />
         <input
+          autoComplete="new-password" // 🔐 disable password autofill
           type="password"
+          name="password"
           placeholder="Password"
           value={password}
           onChange={e => setPassword(e.target.value)}
@@ -52,6 +61,7 @@ function Login() {
           Log In
         </button>
       </form>
+
       <p className="mt-4">
         Don’t have an account?{' '}
         <Link to="/signup" className="text-blue-400 underline hover:text-blue-500">

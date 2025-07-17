@@ -1,9 +1,10 @@
-import { Link, useLocation } from "react-router-dom";
-import { BarChart, Wallet, TrendingUp, PieChart } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { BarChart, Wallet, TrendingUp, PieChart, LogOut } from "lucide-react";
 import { motion } from "framer-motion";
 
 function Nav() {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   const navItems = [
     { name: "Home", path: "/", icon: Wallet },
@@ -11,8 +12,15 @@ function Nav() {
     { name: "Budget Tracker", path: "/budget", icon: TrendingUp },
   ];
 
+  const isLoggedIn = !!sessionStorage.getItem('token');
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('token');
+    navigate('/login');
+  };
+
   return (
-    <motion.nav 
+    <motion.nav
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
@@ -20,7 +28,8 @@ function Nav() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
-          <motion.div 
+          {/* 🔰 Logo */}
+          <motion.div
             className="flex items-center space-x-3"
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.3 }}
@@ -33,35 +42,48 @@ function Nav() {
               Finance Tracker
             </h1>
           </motion.div>
-          
-          <div className="flex space-x-1">
-            {navItems.map(({ name, path, icon: Icon }, index) => (
-              <motion.div
-                key={name}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                <Link
-                  to={path}
-                  className={`relative px-4 py-2 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2 ${
-                    pathname === path 
-                      ? "text-white bg-gradient-to-r from-emerald-500/20 to-blue-500/20 border border-emerald-400/30" 
-                      : "text-white/70 hover:text-white hover:bg-white/5"
-                  }`}
+
+          {/* ✅ Nav Links + Logout */}
+          <div className="flex space-x-1 items-center">
+            {isLoggedIn &&
+              navItems.map(({ name, path, icon: Icon }, index) => (
+                <motion.div
+                  key={name}
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
-                  <Icon className="h-4 w-4" />
-                  <span>{name}</span>
-                  {pathname === path && (
-                    <motion.div
-                      layoutId="activeTab"
-                      className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-blue-500/10 rounded-lg border border-emerald-400/20"
-                      transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                    />
-                  )}
-                </Link>
-              </motion.div>
-            ))}
+                  <Link
+                    to={path}
+                    className={`relative px-4 py-2 rounded-lg font-medium transition-all duration-300 flex items-center space-x-2 ${
+                      pathname === path
+                        ? "text-white bg-gradient-to-r from-emerald-500/20 to-blue-500/20 border border-emerald-400/30"
+                        : "text-white/70 hover:text-white hover:bg-white/5"
+                    }`}
+                  >
+                    <Icon className="h-4 w-4" />
+                    <span>{name}</span>
+                    {pathname === path && (
+                      <motion.div
+                        layoutId="activeTab"
+                        className="absolute inset-0 bg-gradient-to-r from-emerald-500/10 to-blue-500/10 rounded-lg border border-emerald-400/20"
+                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      />
+                    )}
+                  </Link>
+                </motion.div>
+              ))}
+
+            {/* 🔒 Logout button shown only when logged in */}
+            {isLoggedIn && (
+              <button
+                onClick={handleLogout}
+                className="ml-4 px-4 py-2 rounded-lg text-white bg-red-500 hover:bg-red-600 flex items-center space-x-2 transition-all duration-300"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Logout</span>
+              </button>
+            )}
           </div>
         </div>
       </div>

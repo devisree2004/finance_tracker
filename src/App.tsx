@@ -1,5 +1,6 @@
+// src/App.tsx
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Home from "./pages/Home";
 import Nav from "./pages/Nav";
 import { Category } from './categories';
@@ -21,6 +22,16 @@ export type Transaction = {
 
 function App() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => !!localStorage.getItem("token"));
+
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setIsAuthenticated(!!sessionStorage.getItem("token"));
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
+  }, []);
 
   return (
     <Router>
@@ -47,8 +58,8 @@ function App() {
           }}
         />
 
-        {/* 🔗 Navbar (optional: hide if not logged in) */}
-        {localStorage.getItem("token") && <Nav />}
+        {/* ✅ Show Nav only when logged in */}
+        {isAuthenticated && <Nav />}
 
         {/* ✅ App Routes */}
         <Routes>
