@@ -1,35 +1,70 @@
 import { Card } from '../components/ui/card';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { BudgetComparisonChart } from '../components/BudgetComparisonChart';
 import SpendingInsights from '../components/SpendingInsights';
 import { CategoryBudgetsForm } from '../components/CategoryBudgetsForm';
 import { Transaction } from '../App';
+import { getCategoryBudgets, setCategoryBudgets } from '../lib/budget';
+import toast from 'react-hot-toast';
 
 interface BudgetTrackerProps {
   transactions: Transaction[];
 }
 
+const defaultBudgets: Record<string, number> = {
+  Food: 200,
+  Transport: 100,
+  Rent: 600,
+  Shopping: 150,
+  Health: 100,
+  Entertainment: 100,
+  Other: 50,
+};
+
 export function BudgetTracker({ transactions }: BudgetTrackerProps) {
-  const [categoryBudgets, setCategoryBudgets] = useState<Record<string, number>>({
-    Food: 200,
-    Transport: 100,
-    Rent: 600,
-    Shopping: 150,
-    Health: 100,
-    Entertainment: 100,
-    Other: 50,
-  });
+  const [categoryBudgets, setCategoryBudgetsState] = useState<Record<string, number>>(defaultBudgets);
+  const [loading, setLoading] = useState(true);
+
+  // 🔄 Load budgets from backend
+  useEffect(() => {
+    const loadBudgets = async () => {
+      try {
+        const saved = await getCategoryBudgets();
+        if (saved && Object.keys(saved).length > 0) {
+          setCategoryBudgetsState(saved);
+        } else {
+          // Optionally: Save default if none exists
+          await setCategoryBudgets(defaultBudgets);
+        }
+      } catch (err) {
+        toast.error("❌ Failed to load budgets");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadBudgets();
+  }, []);
+
+  // 💾 Save on changes
+  const handleBudgetChange = async (newBudgets: Record<string, number>) => {
+    setCategoryBudgetsState(newBudgets);
+    try {
+      await setCategoryBudgets(newBudgets);
+      toast.success("✅ Budget saved!");
+    } catch (err) {
+      toast.error("❌ Failed to save budgets");
+    }
+  };
 
   const actualSpending = transactions.reduce((acc, transaction) => {
     const category = transaction.category;
-    if (acc[category]) {
-      acc[category] += transaction.amount;
-    } else {
-      acc[category] = transaction.amount;
-    }
+    acc[category] = (acc[category] || 0) + transaction.amount;
     return acc;
   }, {} as Record<string, number>);
+
+  if (loading) return <p className="text-white text-center mt-10">Loading budgets...</p>;
 
   return (
     <div className="min-h-screen p-4 relative">
@@ -44,7 +79,7 @@ export function BudgetTracker({ transactions }: BudgetTrackerProps) {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-4xl font-bold bg-gradient-to-r  from-emerald-600 to-blue-400 bg-clip-text text-transparent mb-2"
+            className="text-4xl font-bold bg-gradient-to-r from-emerald-600 to-blue-400 bg-clip-text text-transparent mb-2"
           >
             Budget Tracker
           </motion.h1>
@@ -70,7 +105,7 @@ export function BudgetTracker({ transactions }: BudgetTrackerProps) {
               </h2>
               <CategoryBudgetsForm
                 categoryBudgets={categoryBudgets}
-                setCategoryBudgets={setCategoryBudgets}
+                setCategoryBudgets={handleBudgetChange}
               />
             </Card>
           </motion.div>
@@ -86,7 +121,7 @@ export function BudgetTracker({ transactions }: BudgetTrackerProps) {
               </h2>
               <BudgetComparisonChart
                 categoryBudgets={categoryBudgets}
-                actualSpending={actualSpending}  
+                actualSpending={actualSpending}
               />
             </Card>
           </motion.div>
@@ -103,7 +138,7 @@ export function BudgetTracker({ transactions }: BudgetTrackerProps) {
             </h2>
             <SpendingInsights
               categoryBudgets={categoryBudgets}
-              actualSpending={actualSpending}  
+              actualSpending={actualSpending}
             />
           </Card>
         </motion.div>

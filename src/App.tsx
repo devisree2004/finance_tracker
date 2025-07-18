@@ -1,9 +1,8 @@
-// src/App.tsx
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Home from "./pages/Home";
 import Nav from "./pages/Nav";
-import { Category } from './categories';
+import type { Category, IncomeCategory, ExpenseCategory } from './categories';
 import Dashboard from './pages/Dashboard';
 import { BudgetTracker } from './pages/BudgetTracker';
 import { Toaster } from 'react-hot-toast';
@@ -16,13 +15,14 @@ export type Transaction = {
   amount: number;
   date: Date;
   description: string;
-  category: Category;
+  category: IncomeCategory | ExpenseCategory;
   type: 'income' | 'expense';
 };
 
 function App() {
+  // ✅ Use sessionStorage instead of localStorage for auth token
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => !!sessionStorage.getItem("token"));
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => !!localStorage.getItem("token"));
 
   useEffect(() => {
     const handleStorageChange = () => {

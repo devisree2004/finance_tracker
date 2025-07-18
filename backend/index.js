@@ -22,6 +22,9 @@ const authMiddleware = require('./middleware/authMiddleware'); // ✅
 
 app.use('/api/auth', authRoutes);
 app.use('/api/transactions', authMiddleware, transactionRoutes); // ✅ protected
+const budgetRoutes = require('./routes/budget');
+app.use('/api/budget', budgetRoutes);
+
 
 app.get('/', (req, res) => {
   res.send('🚀 Finance Tracker Backend is Running!');
